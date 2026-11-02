@@ -1493,7 +1493,7 @@ function renderBattleScreen() {
   document.getElementById("pHeader").innerHTML = "<span style='color:#c9a227'>" + esc(player.name) + "</span> [" + player.level + "] <span class='hp-num'>(" + player.hp + "/" + player.maxHp + ")</span>";
   document.getElementById("pHpBar").style.width = Math.max(0, player.hp / player.maxHp * 100) + "%";
   document.getElementById("pHpText").textContent = player.hp + "/" + player.maxHp;
-  document.getElementById("pDoll").innerHTML = dollHtml(player.equipment, player.name, false, getPlayerAvatar());
+  document.getElementById("pDoll").innerHTML = dollHtml(player.equipment, player.name, false, getPlayerAvatar(), "player");
   document.getElementById("pStats").innerHTML = statsSideHtml("player");
   document.getElementById("pSide").className = "fighter-side active";
 
@@ -1509,7 +1509,7 @@ function renderBattleScreen() {
     document.getElementById("eHpText").textContent = Math.max(0, enemy.hp) + "/" + enemy.maxHp;
     var eEquip = enemy.bossEquipment || enemy.equipMap || (isDuel ? player.equipment : null);
     var eG = ENEMY_GENDERS[enemy.name] || "М";
-    document.getElementById("eDoll").innerHTML = dollHtml(eEquip, enemy.name, false, getBotAvatar(enemy.name, eG));
+    document.getElementById("eDoll").innerHTML = dollHtml(eEquip, enemy.name, false, getBotAvatar(enemy.name, eG), "enemy");
     document.getElementById("eStats").innerHTML = statsSideHtml("enemy");
   } else {
     eSide.className = "fighter-side";
