@@ -1222,131 +1222,66 @@ select {
 /* ==========================================
    МОБИЛЬНАЯ ВЕРСИЯ (ТОЛЬКО ДЛЯ ТЕЛЕФОНОВ)v2
    ========================================== */
+.doll-equip-btn { display: none; }
 @media (max-width: 768px) {
-  
-  /* 1. Общие отступы, чтобы не прилипало к краям */
-  #game {
-    padding: 5px !important;
-    max-width: 100% !important;
-  }
+  #game { padding: 5px !important; max-width: 100% !important; }
+  .battle-grid { gap: 5px !important; display: flex !important; flex-direction: column !important; }
+  .fighter-side { padding: 6px !important; margin-bottom: 5px !important; width: 100% !important; }
 
-  /* 2. Сетка боя: делаем блоки компактнее */
-  .battle-grid {
-    gap: 5px !important;
-    display: flex !important;
-    flex-direction: column !important; /* На телефоне блоки друг под другом */
-  }
-  
-  .fighter-side {
-    padding: 5px !important;
-    margin-bottom: 5px !important;
-    width: 100% !important;
-  }
-
-  /* 3. Уменьшаем куклу персонажа (doll) */
+  /* КУКЛА НА ТЕЛЕФОНЕ: только аватар + кнопка "Вещи", сетка иконок скрыта */
   .doll {
-    transform: scale(0.6); /* Уменьшаем до 60% */
-    margin: -30px auto;    /* Подтягиваем пустое пространство */
-    height: 130px !important;
-  }
-  
-  /* Аватар внутри куклы */
-  .doll .avatar img {
-    max-width: 70px !important;
-    max-height: 70px !important;
-  }
-
-  /* 4. Статы под куклой делаем мельче и в одну строку если влезает */
-  .side-stats {
-    font-size: 11px !important;
-    line-height: 1.2 !important;
-    margin-top: -15px !important;
-    text-align: center !important;
-  }
-  
-  .hp-text {
-    font-size: 12px !important;
-  }
-
-  /* 5. Центральная колонка (Удар и Защита) */
-  .center-col {
-    width: 100% !important;
-    padding: 0 !important;
-  }
-
-  /* Делаем Удар и Защиту в две колонки РЯДОМ, чтобы сэкономить место вниз */
-  .cols-2 {
     display: flex !important;
-    flex-direction: row !important; 
-    justify-content: space-between !important;
-    gap: 8px !important;
-    margin-top: 5px !important;
-  }
-  
-  .cols-2 > div {
-    flex: 1 !important; /* Растягиваем поровну */
-    width: 48% !important;
-  }
-
-  /* Кнопки зон (голова, грудь...) делаем сеткой 2x3 или 3x2 */
-  .zone-btns {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important; /* По 2 кнопки в ряд */
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
     gap: 4px !important;
-  }
-  
-  /* Если кнопок 5, последняя займет всю ширину или будет сбоку - выровняем */
-  .zone-btn {
-    padding: 8px 2px !important;
-    font-size: 11px !important;
-    margin: 0 !important;
-    text-align: center !important;
-    width: 100% !important;
-  }
-  
-  .zone-title {
-    font-size: 12px !important;
-    margin-bottom: 4px !important;
-    text-align: center !important;
-  }
-
-  /* 6. Панель навыков - уплотняем максимально */
-  #skillPanel {
-    font-size: 11px !important;
+    height: auto !important;
+    min-height: 96px !important;
     padding: 4px !important;
-    margin-bottom: 5px !important;
   }
-  
-  .skill-row {
-    display: flex !important;
-    flex-direction: column !important; /* Название сверху, заряды снизу */
-    gap: 2px !important;
-    margin-bottom: 4px !important;
-    padding: 4px !important;
-    background: rgba(0,0,0,0.2);
+  .doll .slot { display: none !important; }
+  .doll .avatar {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: 84px !important;
+    height: 84px !important;
+    opacity: 1 !important;
+  }
+  .doll .avatar img {
+    width: 84px !important;
+    height: 84px !important;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+  .doll-equip-btn {
+    display: inline-block !important;
+    margin-top: 2px;
+    padding: 5px 14px;
+    font-size: 12px;
+    line-height: 1;
+    background: #120e0a;
+    border: 1px solid #5a4630;
     border-radius: 4px;
+    color: #c9a227;
+    cursor: pointer;
   }
-  
-  /* Скрываем длинное описание навыка на мобилке (экономит кучу места) */
-  .sk-desc {
-    display: none !important; 
-  }
-  
-  .sk-name {
-    font-weight: bold;
-  }
+  .doll-equip-btn:active { background: #241c12; }
 
-  /* 7. Кнопка ВПЕРЕД - делаем большой и удобной для пальца */
-  #fightBtn {
-    width: 100% !important;
-    padding: 12px !important;
-    font-size: 16px !important;
-    margin-top: 10px !important;
-  }
-  
-  /* Таймер хода */
-  .turn-timer {
-    font-size: 11px !important;
-    margin-bottom: 5px !important;
-  }
+  .side-stats { font-size: 10px !important; line-height: 1.15 !important; margin-top: 2px !important; text-align: center !important; }
+  .hp-text { font-size: 11px !important; }
+
+  .center-col { width: 100% !important; padding: 0 !important; }
+  .cols-2 { display: flex !important; flex-direction: row !important; justify-content: space-between !important; gap: 6px !important; margin-top: 5px !important; }
+  .cols-2 > div { flex: 1 !important; width: 48% !important; }
+  .zone-btns { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 4px !important; }
+  .zone-btn { padding: 7px 2px !important; font-size: 11px !important; margin: 0 !important; text-align: center !important; width: 100% !important; }
+  .zone-title { font-size: 12px !important; margin-bottom: 4px !important; text-align: center !important; }
+
+  #skillPanel { font-size: 11px !important; padding: 4px !important; margin-bottom: 5px !important; }
+  .skill-row { display: flex !important; flex-direction: column !important; gap: 2px !important; margin-bottom: 4px !important; padding: 4px !important; background: rgba(0,0,0,0.2); border-radius: 4px; }
+  .sk-desc { display: none !important; }
+  .sk-name { font-weight: bold; }
+
+  #fightBtn { width: 100% !important; padding: 12px !important; font-size: 16px !important; margin-top: 8px !important; }
+  .turn-timer { font-size: 11px !important; margin-bottom: 4px !important; }
 }
