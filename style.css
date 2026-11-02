@@ -1219,3 +1219,73 @@ select {
     font-size: 15px;
   }
 }
+/* ==========================================
+   ОПТИМИЗАЦИЯ ДЛЯ ТЕЛЕФОНОВ И TELEGRAM
+   Эти стили работают только если ширина экрана меньше 768px
+   ========================================== */
+@media (max-width: 768px) {
+  
+  /* 1. Уменьшаем отступы и размеры шрифтов в бою, чтобы всё влезало */
+  .battle-grid {
+    gap: 5px !important; /* Уменьшаем расстояние между блоками */
+  }
+  
+  .fighter-side {
+    padding: 5px !important;
+  }
+
+  /* 2. Сильно уменьшаем "куклу" персонажа (doll) */
+  .doll {
+    transform: scale(0.65); /* Уменьшаем куклу до 65% от оригинала */
+    margin: -20px auto;     /* Подтягиваем блоки вверх и вниз, т.к. кукла стала меньше */
+    height: 140px !important;
+  }
+  
+  /* 3. Делаем кнопки зон (удар/защита) компактнее */
+  .zone-btn {
+    padding: 6px 4px !important;
+    font-size: 12px !important;
+    margin: 2px !important;
+  }
+  
+  .zone-title {
+    font-size: 13px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* 4. Уменьшаем панель навыков, чтобы она не съедала пол-экрана */
+  #skillPanel {
+    font-size: 11px !important;
+    padding: 4px !important;
+  }
+  
+  .skill-row {
+    display: flex;
+    flex-direction: column; /* Название навыка сверху, заряды снизу */
+    gap: 2px;
+    margin-bottom: 4px;
+    padding: 4px !important;
+  }
+
+  /* 5. Уменьшаем полоски HP и текст статов под куклой */
+  .side-stats {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+  
+  .hp-text {
+    font-size: 11px !important;
+  }
+
+  /* 6. Фиксируем кнопку "ВПЕРЁД!" внизу экрана (опционально, но очень удобно!) */
+  /* Раскомментируй (убери /* и *\/), если захочешь, чтобы кнопка всегда висела внизу
+  .center-col p {
+    position: sticky;
+    bottom: 0;
+    background: #1a1510; /* Цвет фона твоей игры 
+    padding: 10px 0;
+    z-index: 10;
+    border-top: 1px solid #5a4630;
+  }
+  */
+}
