@@ -1220,72 +1220,133 @@ select {
   }
 }
 /* ==========================================
-   ОПТИМИЗАЦИЯ ДЛЯ ТЕЛЕФОНОВ И TELEGRAM
-   Эти стили работают только если ширина экрана меньше 768px
+   МОБИЛЬНАЯ ВЕРСИЯ (ТОЛЬКО ДЛЯ ТЕЛЕФОНОВ)v2
    ========================================== */
 @media (max-width: 768px) {
   
-  /* 1. Уменьшаем отступы и размеры шрифтов в бою, чтобы всё влезало */
+  /* 1. Общие отступы, чтобы не прилипало к краям */
+  #game {
+    padding: 5px !important;
+    max-width: 100% !important;
+  }
+
+  /* 2. Сетка боя: делаем блоки компактнее */
   .battle-grid {
-    gap: 5px !important; /* Уменьшаем расстояние между блоками */
+    gap: 5px !important;
+    display: flex !important;
+    flex-direction: column !important; /* На телефоне блоки друг под другом */
   }
   
   .fighter-side {
     padding: 5px !important;
+    margin-bottom: 5px !important;
+    width: 100% !important;
   }
 
-  /* 2. Сильно уменьшаем "куклу" персонажа (doll) */
+  /* 3. Уменьшаем куклу персонажа (doll) */
   .doll {
-    transform: scale(0.65); /* Уменьшаем куклу до 65% от оригинала */
-    margin: -20px auto;     /* Подтягиваем блоки вверх и вниз, т.к. кукла стала меньше */
-    height: 140px !important;
+    transform: scale(0.6); /* Уменьшаем до 60% */
+    margin: -30px auto;    /* Подтягиваем пустое пространство */
+    height: 130px !important;
   }
   
-  /* 3. Делаем кнопки зон (удар/защита) компактнее */
-  .zone-btn {
-    padding: 6px 4px !important;
-    font-size: 12px !important;
-    margin: 2px !important;
-  }
-  
-  .zone-title {
-    font-size: 13px !important;
-    margin-bottom: 4px !important;
+  /* Аватар внутри куклы */
+  .doll .avatar img {
+    max-width: 70px !important;
+    max-height: 70px !important;
   }
 
-  /* 4. Уменьшаем панель навыков, чтобы она не съедала пол-экрана */
-  #skillPanel {
-    font-size: 11px !important;
-    padding: 4px !important;
-  }
-  
-  .skill-row {
-    display: flex;
-    flex-direction: column; /* Название навыка сверху, заряды снизу */
-    gap: 2px;
-    margin-bottom: 4px;
-    padding: 4px !important;
-  }
-
-  /* 5. Уменьшаем полоски HP и текст статов под куклой */
+  /* 4. Статы под куклой делаем мельче и в одну строку если влезает */
   .side-stats {
-    font-size: 10px !important;
+    font-size: 11px !important;
     line-height: 1.2 !important;
+    margin-top: -15px !important;
+    text-align: center !important;
   }
   
   .hp-text {
-    font-size: 11px !important;
+    font-size: 12px !important;
   }
 
-  /* 6. Фиксируем кнопку "ВПЕРЁД!" внизу экрана (опционально, но очень удобно!) */
-  /* Раскомментируй (убери /* и *\/), если захочешь, чтобы кнопка всегда висела внизу
-  .center-col p {
-    position: sticky;
-    bottom: 0;
-    background: #1a1510; /* Цвет фона твоей игры 
-    padding: 10px 0;
-    z-index: 10;
-    border-top: 1px solid #5a4630;
+  /* 5. Центральная колонка (Удар и Защита) */
+  .center-col {
+    width: 100% !important;
+    padding: 0 !important;
   }
-  */
+
+  /* Делаем Удар и Защиту в две колонки РЯДОМ, чтобы сэкономить место вниз */
+  .cols-2 {
+    display: flex !important;
+    flex-direction: row !important; 
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin-top: 5px !important;
+  }
+  
+  .cols-2 > div {
+    flex: 1 !important; /* Растягиваем поровну */
+    width: 48% !important;
+  }
+
+  /* Кнопки зон (голова, грудь...) делаем сеткой 2x3 или 3x2 */
+  .zone-btns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; /* По 2 кнопки в ряд */
+    gap: 4px !important;
+  }
+  
+  /* Если кнопок 5, последняя займет всю ширину или будет сбоку - выровняем */
+  .zone-btn {
+    padding: 8px 2px !important;
+    font-size: 11px !important;
+    margin: 0 !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  
+  .zone-title {
+    font-size: 12px !important;
+    margin-bottom: 4px !important;
+    text-align: center !important;
+  }
+
+  /* 6. Панель навыков - уплотняем максимально */
+  #skillPanel {
+    font-size: 11px !important;
+    padding: 4px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .skill-row {
+    display: flex !important;
+    flex-direction: column !important; /* Название сверху, заряды снизу */
+    gap: 2px !important;
+    margin-bottom: 4px !important;
+    padding: 4px !important;
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+  }
+  
+  /* Скрываем длинное описание навыка на мобилке (экономит кучу места) */
+  .sk-desc {
+    display: none !important; 
+  }
+  
+  .sk-name {
+    font-weight: bold;
+  }
+
+  /* 7. Кнопка ВПЕРЕД - делаем большой и удобной для пальца */
+  #fightBtn {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+    margin-top: 10px !important;
+  }
+  
+  /* Таймер хода */
+  .turn-timer {
+    font-size: 11px !important;
+    margin-bottom: 5px !important;
+  }
 }
