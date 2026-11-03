@@ -1336,101 +1336,6 @@ select {
     border-radius: 4px;
   }
 
-  /* --- ЧАТ: ПЛАВАЮЩАЯ КНОПКА И ОКНО --- */
-  
-  /* Старая нижняя панель удаляется через JS/CSS выше, здесь стилизуем новую */
-  .chat-floating-btn {
-    position: fixed;
-    bottom: calc(20px + env(safe-area-inset-bottom)); /* Учитываем навбар телефона */
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #c9a227, #8a6d1b);
-    border-radius: 50%;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  .chat-floating-btn:active { transform: scale(0.9); }
-  .chat-float-icon { font-size: 24px; color: white; }
-  .chat-float-badge {
-    position: absolute; top: -5px; right: -5px;
-    background: red; color: white; font-size: 10px;
-    padding: 2px 5px; border-radius: 10px; font-weight: bold;
-  }
-
-  /* Окно чата теперь модальное, занимает почти весь экран */
-  .chat-window-mobile {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 70vh; /* Занимает 70% высоты экрана */
-    max-height: 600px;
-    background: #1a1510;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
-    display: flex;
-    flex-direction: column;
-    z-index: 1001;
-    animation: slideUp 0.3s ease-out;
-  }
-
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-  .chat-header-mobile {
-    padding: 10px 15px;
-    background: #2a2015;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #5a4630;
-  }
-  .chat-title { color: #c9a227; font-weight: bold; font-size: 16px; }
-  .chat-close-mobile { background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; }
-
-  .chat-tabs-mobile {
-    display: flex;
-    overflow-x: auto;
-    background: #120e0a;
-    padding: 5px;
-    gap: 5px;
-  }
-  .chat-tab {
-    padding: 6px 12px;
-    background: #2a2015;
-    color: #9a8a68;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-  .chat-tab.active { background: #c9a227; color: black; font-weight: bold; }
-
-  .chat-messages-mobile {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .chat-input-row-mobile {
-    display: flex;
-    gap: 5px;
-    padding: 10px;
-    background: #120e0a;
-    border-top: 1px solid #3a2e20;
-    /* Безопасная зона снизу для ввода текста */
-    padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
-  }
-  .mobile-select { flex-shrink: 0; width: 80px; background: #2a2015; color: white; border: 1px solid #5a4630; border-radius: 4px; }
-  #chatInput { flex: 1; background: #2a2015; border: 1px solid #5a4630; color: white; padding: 8px; border-radius: 4px; font-size: 14px; }
-  .mobile-send-btn { background: #c9a227; color: black; border: none; padding: 8px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-
   /* --- ОБЩИЕ ЭЛЕМЕНТЫ UI --- */
   .tabs {
     display: flex;
@@ -1464,3 +1369,189 @@ select {
     .sk-desc { display: none; }
   }
 }
+
+/* ==========================================
+   ФИНАЛЬНАЯ НАСТРОЙКА ЧАТА (V6 CLEAN)
+   Работает только с классами chat-floating-btn и chat-window-mobile
+   ========================================== */
+
+/* 1. ПЛАВАЮЩАЯ КНОПКА */
+.chat-floating-btn {
+  position: fixed;       /* Фиксируем на экране */
+  bottom: 20px;          /* Отступ снизу */
+  right: 20px;           /* Отступ справа */
+  width: 50px;           /* Ширина круга */
+  height: 50px;          /* Высота круга */
+  background: linear-gradient(135deg, #c9a227, #8a6d1b); /* Золотой градиент */
+  border-radius: 50%;    /* Делаем круглым */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* Тень */
+  display: flex;         /* Центрируем содержимое */
+  align-items: center;
+  justify-content: center;
+  z-index: 9999 !important; /* Поднимаем над всем остальным контентом */
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s;
+  border: 2px solid #fff; /* Белая рамочка */
+  pointer-events: auto !important; /* Разрешаем клики принудительно */
+}
+
+/* Эффект при наведении мышкой (для десктопа) */
+.chat-floating-btn:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+
+/* Эффект при нажатии пальцем/мышкой */
+.chat-floating-btn:active {
+  transform: scale(0.9);
+}
+
+/* Иконка внутри кнопки */
+.chat-float-icon {
+  font-size: 24px;
+  color: white;
+  line-height: 1;
+}
+
+/* Бейдж уведомлений (красный кружочек со числом) */
+.chat-float-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  display: none; /* Скрыт по умолчанию */
+}
+/* Показываем бейдж, если JS убрал класс hidden */
+.chat-float-badge:not(.hidden) {
+  display: block !important;
+}
+
+
+/* 2. ОКНО ЧАТА (МОДАЛЬНОЕ) */
+.chat-window-mobile {
+  position: fixed;
+  bottom: 0; 
+  left: 0; 
+  right: 0;
+  height: 70vh; 
+  max-height: 600px;
+  background: #1a1510;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  z-index: 10001; /* Выше кнопки */
+  animation: slideUp 0.3s ease-out;
+  margin: 0 auto; /* Центрируем на широких экранах */
+  width: 100%;
+  max-width: 500px; /* Ограничиваем ширину на ПК */
+}
+
+@keyframes slideUp { 
+  from { transform: translateY(100%); } 
+  to { transform: translateY(0); } 
+}
+
+/* Шапка окна */
+.chat-header-mobile {
+  padding: 10px 15px;
+  background: #2a2015;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #5a4630;
+}
+.chat-title { color: #c9a227; font-weight: bold; font-size: 16px; }
+.chat-close-mobile { 
+  background: none; 
+  border: none; 
+  color: #aaa; 
+  font-size: 24px; 
+  cursor: pointer;
+  padding: 0 5px;
+}
+.chat-close-mobile:hover { color: #fff; }
+
+/* Табы чата */
+.chat-tabs-mobile {
+  display: flex;
+  overflow-x: auto;
+  background: #120e0a;
+  padding: 5px;
+  gap: 5px;
+  border-bottom: 1px solid #3a2e20;
+}
+.chat-tab {
+  padding: 6px 12px;
+  background: #2a2015;
+  color: #9a8a68;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.chat-tab:hover { background: #3a2e20; color: #ccc; }
+.chat-tab.active { 
+  background: #c9a227; 
+  color: black; 
+  font-weight: bold; 
+}
+
+/* Сообщения */
+.chat-messages-mobile {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #120e0a;
+}
+
+/* Поле ввода */
+.chat-input-row-mobile {
+  display: flex;
+  gap: 5px;
+  padding: 10px;
+  background: #1a1510;
+  border-top: 1px solid #3a2e20;
+}
+.mobile-select { 
+  flex-shrink: 0; 
+  width: 80px; 
+  background: #2a2015; 
+  color: white; 
+  border: 1px solid #5a4630; 
+  border-radius: 4px; 
+  padding: 5px;
+}
+#chatInput { 
+  flex: 1; 
+  background: #2a2015; 
+  border: 1px solid #5a4630; 
+  color: white; 
+  padding: 8px; 
+  border-radius: 4px; 
+  font-size: 14px; 
+}
+#chatInput:focus { outline: none; border-color: #c9a227; }
+.mobile-send-btn { 
+  background: #c9a227; 
+  color: black; 
+  border: none; 
+  padding: 8px 12px; 
+  border-radius: 4px; 
+  font-weight: bold; 
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mobile-send-btn:hover { background: #e0b830; }
