@@ -5,8 +5,8 @@
 <!-- 👇 ДОБАВЬ ЭТУ СТРОКУ (для корректного отображения на телефоне) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Когда есть время</title>
-<link rel="stylesheet" href="style.css?v=10">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="style.css?v=8">
+<!-- <script src="https://telegram.org/js/telegram-web-app.js"></script> -->
 </head>
 <body>
   <script>
@@ -3639,37 +3639,56 @@ function renderChatOnlineList() {
   var container = document.getElementById("chatOnlineList");
   var countEl = document.getElementById("chatOnlineCount");
   
-  // Если элементов нет (например, страница еще грузится), выходим
-  if (!container || !countEl) return;
-
-  // Используем твою существующую логику загрузки списка игроков
-  var data = loadOnlineList(); 
-  
-  // Если данных нет или они устарели — обновляем
-  if (!data || (Date.now() - data.ts > ONLINE_REGEN_INTERVAL)) {
-    regenerateOnline(); 
-    data = loadOnlineList();
+  if (!container || !countEl) {
+    console.warn("Не найдены элементы чата онлайн");
+    return;
   }
-  
-  var list = data.list || [];
+
+  // Безопасная попытка получить данные
+  var list = [];
+  try {
+    var data = loadOnlineList(); 
+    
+    // Если данных нет или они старые — генерируем новые
+    if (!data || !data.list || (Date.now() - data.ts > ONLINE_REGEN_INTERVAL)) {
+       // Проверяем, существует ли функция regenerateOnline перед вызовом
+       if (typeof regenerateOnline === 'function') {
+          regenerateOnline(); 
+          data = loadOnlineList();
+       }
+    }
+    
+    if (data && data.list) {
+      list = data.list;
+    }
+  } catch (e) {
+    console.error("Ошибка при загрузке списка онлайн:", e);
+    list = []; // Пустой список при ошибке
+  }
+
   countEl.textContent = list.length;
 
   var html = "";
-  list.forEach(function(p) {
-    // Определяем иконку класса
-    var icon = '?';
-    if (p.arch === 'fighter') icon = '⚔';
-    else if (p.arch === 'tank') icon = '🛡';
-    else if (p.arch === 'dodger') icon = '💨';
-    else if (p.arch === 'crit') icon = '☠';
-    
-    // Создаем строку игрока. При клике вызывается startPMWith(имя)
-    html += "<div class='online-player-row" + (p.isMe ? " me" : "") + "' " +
-            "onclick=\"startPMWith('" + esc(p.name) + "')\">" +
-            "<span class='online-player-icon'>" + icon + "</span>" +
-            "<span class='online-player-name'>" + esc(p.name) + "</span>" +
-            "</div>";
-  });
+  if (list.length === 0) {
+    html = "<div style='padding:10px;color:#888;text-align:center;font-size:11px;'>Нет активных игроков</div>";
+  } else {
+    list.forEach(function(p) {
+      var icon = '?';
+      if (p.arch === 'fighter') icon = '⚔';
+      else if (p.arch === 'tank') icon = '🛡';
+      else if (p.arch === 'dodger') icon = '💨';
+      else if (p.arch === 'crit') icon = '☠';
+      
+      // Используем esc(), чтобы экранировать спецсимволы в имени
+      var safeName = typeof esc === 'function' ? esc(p.name) : p.name;
+      
+      html += "<div class='online-player-row" + (p.isMe ? " me" : "") + "' " +
+              "onclick=\"startPMWith('" + safeName.replace(/'/g, "\\'") + "')\">" +
+              "<span class='online-player-icon'>" + icon + "</span>" +
+              "<span class='online-player-name'>" + safeName + "</span>" +
+              "</div>";
+    });
+  }
   
   container.innerHTML = html;
 }
