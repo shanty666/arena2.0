@@ -1216,6 +1216,79 @@ function showPlayerCard() {
   document.getElementById("modalEquipSection").innerHTML = "<div class='modal-section'><div class='modal-section-title'>Экипировка (13 слотов)</div>" + equipHtml + "</div>" + zoneHtml;
   document.getElementById("modalOverlay").classList.remove("hidden");
 }
+  // === НОВАЯ ФУНКЦИЯ: ПОКАЗАТЬ СПИСОК ЭКИПИРОВКИ ===
+function showEquipList() {
+  if (!player) return;
+  
+  var content = document.getElementById("equipListContent");
+  var html = "";
+  var hasItems = false;
+
+  // Перебираем все возможные слоты
+  SLOTS.forEach(function(slotKey) {
+    var inst = player.equipment[slotKey];
+    if (!inst) return; // Если слот пустой — пропускаем
+    
+    hasItems = true;
+    var itemData = getTemplate(inst.id); // Получаем полные данные предмета
+    if (!itemData) return;
+
+    // Формируем строку статуса прочности и улучшений
+    var statusStr = "";
+    var maxDur = getMaxDurability(itemData);
+    var curDur = inst.dur !== undefined ? inst.dur : maxDur;
+    
+    if (curDur <= 0) {
+      statusStr += " <span style='color:#ff4444'>[СЛОМАНО]</span>";
+    } else if (curDur < maxDur * 0.3) {
+      statusStr += " <span style='color:#e07020'>[" + curDur + "/" + maxDur + "]</span>";
+    } else {
+      statusStr += " <span style='color:#7ab648'>[" + curDur + "/" + maxDur + "]</span>";
+    }
+
+    // Улучшения (+N заточки или крафта)
+    var upgradeStr = "";
+    if (slotKey === "weapon" && inst.upg > 0) {
+      upgradeStr = " <span class='upg' style='color:#b380e0'>+" + inst.upg + "</span>";
+    } else if (slotKey !== "weapon" && inst.craft > 0) {
+      upgradeStr = " <span class='upg' style='color:#b380e0'>[Крафт +" + inst.craft + "/3]</span>";
+    }
+
+    // Характеристики (бонусы)
+    var statsHtml = bonusText(itemData.bonus); // Используем твою существующую функцию!
+    
+    // Специфика для оружия (урон)
+    if (itemData.slot === "weapon") {
+       statsHtml = "Урон: " + itemData.dmgMin + "-" + itemData.dmgMax + 
+                   (statsHtml !== "—" ? " · " + statsHtml : "");
+    }
+
+    html += "<div class='equip-list-item'>" +
+              "<div class='equip-slot-name'>" + SLOT_NAMES[slotKey] + "</div>" +
+              "<div class='equip-item-info'>" +
+                "<div class='equip-item-name'>" + itemData.name + upgradeStr + statusStr + "</div>" +
+                "<div class='equip-item-stats'>" + statsHtml + "</div>" +
+              "</div>" +
+            "</div>";
+  });
+
+  if (!hasItems) {
+    html = "<div class='equip-empty-msg'>Персонаж голый!<br>Загляни в магазин.</div>";
+  }
+
+  content.innerHTML = html;
+  document.getElementById("equipListOverlay").classList.remove("hidden");
+}
+
+function closeEquipList(e) {
+  if (e.target === document.getElementById("equipListOverlay")) {
+    document.getElementById("equipListOverlay").classList.add("hidden");
+  }
+}
+
+function closeEquipListForce() {
+  document.getElementById("equipListOverlay").classList.add("hidden");
+}
 function showEnemyCard() {
   if (!enemy) return;
   var age = ENEMY_AGES[enemy.name] || 25;
