@@ -3541,7 +3541,14 @@ function closeChatForce() {
   CHAT_OPEN = false;
   document.getElementById("chatOverlay").classList.add("hidden");
 }
-
+// Новая функция: переключает чат (открыть/закрыть)
+function toggleChatWindow() {
+  if (CHAT_OPEN) {
+    closeChatForce(); // Если открыт — закрываем
+  } else {
+    openChat();       // Если закрыт — открываем
+  }
+}
 function sendChatMessage() {
   var input = document.getElementById("chatInput");
   if (!input) return;
