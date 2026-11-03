@@ -3586,5 +3586,14 @@ document.addEventListener("keydown", function(e) {
     <button class="cancel-btn" onclick="cancelPvpSearchForce()">Отмена</button>
   </div>
 </div>
+  <!-- Новое окно для просмотра экипировки -->
+<div id="equipListOverlay" class="modal-overlay hidden" onclick="closeEquipList(event)">
+  <div class="modal-card" style="max-width:500px;" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeEquipListForce()">&times;</button>
+    <h3>🎒 Экипировка бойца</h3>
+    <!-- Сюда JavaScript будет вставлять список вещей -->
+    <div id="equipListContent"></div>
+  </div>
+</div>
 </body>
 </html>
