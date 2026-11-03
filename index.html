@@ -5,7 +5,7 @@
 <!-- 👇 ДОБАВЬ ЭТУ СТРОКУ (для корректного отображения на телефоне) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Когда есть время</title>
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=8">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -3522,8 +3522,13 @@ function switchChatTab(tab) {
 function openChat() {
   CHAT_OPEN = true;
   document.getElementById("chatOverlay").classList.remove("hidden");
+  
   // Помечаем текущий канал как прочитанный
   switchChatTab(CHAT_ACTIVE_TAB);
+  
+  // НОВОЕ: Рисуем список онлайн игроков
+  renderChatOnlineList();
+  
   setTimeout(function() {
     var input = document.getElementById("chatInput");
     if (input) input.focus();
@@ -3627,7 +3632,86 @@ document.addEventListener("keydown", function(e) {
     return;
   }
 });
+// === ФУНКЦИИ ДЛЯ СПИСКА ОНЛАЙН В ЧАТЕ ===
 
+// Эта функция берет данные из твоего существующего кода online и рисует их в правой колонке
+function renderChatOnlineList() {
+  var container = document.getElementById("chatOnlineList");
+  var countEl = document.getElementById("chatOnlineCount");
+  
+  // Если элементов нет (например, страница еще грузится), выходим
+  if (!container || !countEl) return;
+
+  // Используем твою существующую логику загрузки списка игроков
+  var data = loadOnlineList(); 
+  
+  // Если данных нет или они устарели — обновляем
+  if (!data || (Date.now() - data.ts > ONLINE_REGEN_INTERVAL)) {
+    regenerateOnline(); 
+    data = loadOnlineList();
+  }
+  
+  var list = data.list || [];
+  countEl.textContent = list.length;
+
+  var html = "";
+  list.forEach(function(p) {
+    // Определяем иконку класса
+    var icon = '?';
+    if (p.arch === 'fighter') icon = '⚔';
+    else if (p.arch === 'tank') icon = '🛡';
+    else if (p.arch === 'dodger') icon = '💨';
+    else if (p.arch === 'crit') icon = '☠';
+    
+    // Создаем строку игрока. При клике вызывается startPMWith(имя)
+    html += "<div class='online-player-row" + (p.isMe ? " me" : "") + "' " +
+            "onclick=\"startPMWith('" + esc(p.name) + "')\">" +
+            "<span class='online-player-icon'>" + icon + "</span>" +
+            "<span class='online-player-name'>" + esc(p.name) + "</span>" +
+            "</div>";
+  });
+  
+  container.innerHTML = html;
+}
+
+// Эта функция запускается, когда игрок кликает по имени в списке справа
+function startPMWith(playerName) {
+  // 1. Переключаемся на вкладку "Личные сообщения"
+  switchChatTab("pm");
+  
+  // 2. Находим селект получателя и выбираем нужного игрока
+  var sel = document.getElementById("chatPmSelect");
+  if (sel) {
+    // Проверяем, есть ли такой игрок в списке опций
+    var found = false;
+    for(var i=0; i<sel.options.length; i++) {
+      if(sel.options[i].value === playerName) {
+        sel.selectedIndex = i;
+        found = true;
+        break;
+      }
+    }
+    // Если игрока нет в списке NPC (например, это реальный игрок), добавляем его динамически
+    if(!found) {
+      var opt = document.createElement("option");
+      opt.value = playerName;
+      opt.textContent = "→ " + playerName;
+      sel.appendChild(opt);
+      sel.value = playerName;
+    }
+  }
+  
+  // 3. Ставим курсор в поле ввода, чтобы можно было сразу писать
+  var input = document.getElementById("chatInput");
+  if(input) input.focus();
+}
+
+// Автообновление списка онлайн каждые 30 секунд, пока чат открыт
+setInterval(function() {
+  if(CHAT_OPEN) {
+    renderChatOnlineList();
+  }
+}, 30000);
 (function init() {
   try {
     var saved = loadSave();
@@ -3658,18 +3742,44 @@ document.addEventListener("keydown", function(e) {
 
 <!-- Само окно чата (теперь оно не внизу страницы, а поверх всего) -->
 <div id="chatOverlay" class="chat-modal hidden" onclick="closeChat(event)">
-  <div class="chat-window-mobile" onclick="event.stopPropagation()">
-    <div class="chat-header-mobile">
-      <span class="chat-title">💬 Чат Арены</span>
-      <button class="chat-close-mobile" onclick="closeChatForce()">&times;</button>
+<div class="chat-window-mobile" onclick="event.stopPropagation()">
+  
+  <!-- Шапка чата -->
+  <div class="chat-header-mobile">
+    <span class="chat-title">💬 Чат Арены</span>
+    <button class="chat-close-mobile" onclick="closeChatForce()">&times;</button>
+  </div>
+
+  <!-- НОВАЯ ОБЕРТКА ДЛЯ ДВУХ КОЛОНОК -->
+  <div class="chat-body-split">
+    
+    <!-- ЛЕВАЯ ЧАСТЬ: Табы и Сообщения -->
+    <div class="chat-main-panel">
+      <div class="chat-tabs-mobile" id="chatTabs"></div>
+      <div class="chat-messages-mobile" id="chatMessages"></div>
     </div>
-    <div class="chat-tabs-mobile" id="chatTabs"></div>
-    <div class="chat-messages-mobile" id="chatMessages"></div>
+
+    <!-- ПРАВАЯ ЧАСТЬ: Список Онлайн Игроков -->
+    <div class="chat-online-panel">
+      <div class="online-header-mini">
+        <span class="online-title-small">🟢 Онлайн</span>
+        <span class="online-count-badge" id="chatOnlineCount">0</span>
+      </div>
+      <div class="online-list-scrollable" id="chatOnlineList">
+        <!-- Сюда JavaScript будет вставлять список игроков -->
+      </div>
+    </div>
+
+  </div>
+  <!-- КОНЕЦ ОБЕРТКИ -->
+
+    <!-- Поле ввода -->
     <div class="chat-input-row-mobile">
       <select id="chatPmSelect" class="hidden mobile-select"></select>
       <input type="text" id="chatInput" maxlength="200" placeholder="Сообщение..." autocomplete="off">
       <button onclick="sendChatMessage()" class="mobile-send-btn">➤</button>
     </div>
+
   </div>
 </div>
 <div id="pvpSearchOverlay" class="pvp-search-overlay hidden" onclick="cancelPvpSearch(event)">
@@ -3689,5 +3799,40 @@ document.addEventListener("keydown", function(e) {
     <div id="equipListContent"></div>
   </div>
 </div>
+<script>
+// Создаем частицы при загрузке
+document.addEventListener("DOMContentLoaded", function() {
+  var container = document.createElement("div");
+  container.className = "bg-particles";
+  document.body.prepend(container); // Добавляем в начало body
+
+  // КОЛИЧЕСТВО ЧАСТИЦ: увеличил с 20 до 35 для насыщенности
+  for(var i=0; i<35; i++) {
+    var p = document.createElement("div");
+    p.className = "particle";
+    
+    // РАЗМЕР: Увеличили диапазон от 4px до 10px
+    // Было: Math.random() * 4 + 2 (результат 2-6px)
+    // Стало: Math.random() * 6 + 4 (результат 4-10px)
+    var size = Math.random() * 6 + 4; 
+    
+    p.style.width = size + "px";
+    p.style.height = size + "px";
+    
+    // ПОЗИЦИЯ: Случайная по всей ширине экрана
+    p.style.left = Math.random() * 100 + "%";
+    
+    // АНИМАЦИЯ:
+    // 1. Длительность: Замедлили полет. От 15 до 25 секунд.
+    //    Было: 10-20 сек. Стало: 15-25 сек.
+    p.style.animationDuration = (Math.random() * 10 + 15) + "s";
+    
+    // 2. Задержка: Разброс старта, чтобы все не вылетели одновременно
+    p.style.animationDelay = (Math.random() * 10) + "s";
+    
+    container.appendChild(p);
+  }
+});
+</script>
 </body>
 </html>
