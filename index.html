@@ -5,7 +5,7 @@
 <!-- 👇 ДОБАВЬ ЭТУ СТРОКУ (для корректного отображения на телефоне) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Когда есть время</title>
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=8">
 <!-- <script src="https://telegram.org/js/telegram-web-app.js"></script> -->
 </head>
 <body>
@@ -3528,11 +3528,10 @@ function openChat() {
   CHAT_OPEN = true;
   document.getElementById("chatOverlay").classList.remove("hidden");
   
-  // Помечаем текущий канал как прочитанный
   switchChatTab(CHAT_ACTIVE_TAB);
   
-  // НОВОЕ: Рисуем список онлайн игроков
-  renderChatOnlineList();
+  // 👇 ЭТА СТРОКА ОБЯЗАТЕЛЬНА ДЛЯ МГНОВЕННОГО ПОЯВЛЕНИЯ СПИСКА
+  renderChatOnlineList(); 
   
   setTimeout(function() {
     var input = document.getElementById("chatInput");
