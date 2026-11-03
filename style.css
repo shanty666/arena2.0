@@ -1285,3 +1285,40 @@ select {
   #fightBtn { width: 100% !important; padding: 12px !important; font-size: 16px !important; margin-top: 8px !important; }
   .turn-timer { font-size: 11px !important; margin-bottom: 4px !important; }
 }
+/* Стили для окна списка экипировки */
+.equip-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #3a2e20;
+  background: rgba(0,0,0,0.1);
+}
+.equip-list-item:last-child {
+  border-bottom: none;
+}
+.equip-slot-name {
+  color: #9a8a68;
+  font-size: 12px;
+  text-transform: uppercase;
+  min-width: 80px;
+}
+.equip-item-info {
+  flex: 1;
+  margin-left: 10px;
+}
+.equip-item-name {
+  font-weight: bold;
+  color: #c9a227;
+}
+.equip-item-stats {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 2px;
+}
+.equip-empty-msg {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+  font-style: italic;
+}
