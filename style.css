@@ -1644,24 +1644,30 @@ select {
 
 /* Правая панель (список игроков) */
 .chat-online-panel {
-  flex: 1; /* Занимает 1/3 ширины */
-  background: #0f0c09; /* Чуть темнее основного фона */
-  display: flex;
+  /* ВАЖНО: Принудительно показываем панель даже на маленьких экранах */
+  display: flex !important; 
+  
+  /* Задаем минимальную ширину, чтобы она не схлопнулась в ноль */
+  min-width: 150px; 
+  width: 200px; /* Фиксированная ширина для надежности */
+  
+  background: #0f0c09; 
   flex-direction: column;
   padding: 5px;
-  overflow-y: auto; /* Если игроков много — появится скролл только здесь */
+  overflow-y: auto; 
+  border-left: 1px solid #3a2e20; /* Видимая граница слева */
 }
 
-/* Заголовок списка онлайн */
-.online-header-mini {
-  font-size: 12px;
-  color: #7ab648; /* Зеленый цвет статуса онлайн */
-  margin-bottom: 5px;
-  padding-bottom: 3px;
-  border-bottom: 1px dashed #3a2e20;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Если у тебя есть медиа-запрос @media (max-width: 768px), 
+   найди внутри него .chat-online-panel и УДАЛИ строку 'display: none;' */
+@media (max-width: 768px) {
+  .chat-online-panel {
+    /* display: none; <-- ЭТУ СТРОКУ НУЖНО УДАЛИТЬ ИЛИ ЗАКОММЕНТИРОВАТЬ */
+    max-height: 150px;
+    border-top: 1px solid #3a2e20;
+    width: 100%; /* На телефоне пусть будет во всю ширину, но сверху */
+    order: -1; /* Поднимаем список над сообщениями */
+  }
 }
 
 .online-count-badge {
