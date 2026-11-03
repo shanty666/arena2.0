@@ -1642,34 +1642,6 @@ select {
   min-width: 0; /* Предотвращает переполнение текста */
 }
 
-/* Правая панель (список игроков) */
-.chat-online-panel {
-  /* ВАЖНО: Принудительно показываем панель даже на маленьких экранах */
-  display: flex !important; 
-  
-  /* Задаем минимальную ширину, чтобы она не схлопнулась в ноль */
-  min-width: 150px; 
-  width: 200px; /* Фиксированная ширина для надежности */
-  
-  background: #0f0c09; 
-  flex-direction: column;
-  padding: 5px;
-  overflow-y: auto; 
-  border-left: 1px solid #3a2e20; /* Видимая граница слева */
-}
-
-/* Если у тебя есть медиа-запрос @media (max-width: 768px), 
-   найди внутри него .chat-online-panel и УДАЛИ строку 'display: none;' */
-@media (max-width: 768px) {
-  .chat-online-panel {
-    /* display: none; <-- ЭТУ СТРОКУ НУЖНО УДАЛИТЬ ИЛИ ЗАКОММЕНТИРОВАТЬ */
-    max-height: 150px;
-    border-top: 1px solid #3a2e20;
-    width: 100%; /* На телефоне пусть будет во всю ширину, но сверху */
-    order: -1; /* Поднимаем список над сообщениями */
-  }
-}
-
 .online-count-badge {
   background: #2a2015;
   color: #ccc;
@@ -1720,12 +1692,96 @@ select {
     flex-direction: column; /* Колонки становятся друг под другом */
   }
   
-  /* На телефоне скрываем панель онлайна по умолчанию, чтобы не мешала */
-  .chat-online-panel {
-    display: none; 
-    max-height: 150px; /* Ограничиваем высоту, если вдруг покажем */
-    border-top: 1px solid #3a2e20;
+ /* ==========================================
+   ПРАВАЯ ПАНЕЛЬ ОНЛАЙН (ФИНАЛЬНАЯ ВЕРСИЯ)
+   ========================================== */
+
+/* 1. Базовые стили для ДЕСКТОПА (широкие экраны) */
+.chat-online-panel {
+  display: flex !important; /* Гарантируем видимость */
+  flex-direction: column;
+  width: 200px;             /* Фиксированная ширина справа */
+  min-width: 200px;         /* Не даем ей схлопнуться */
+  background: #0f0c09;      /* Темный фон */
+  border-left: 1px solid #3a2e20; /* Разделитель слева от списка */
+  padding: 5px;
+  overflow-y: auto;         /* Скролл, если игроков много */
+  flex-shrink: 0;           /* Запрещаем сжиматься при нехватке места */
+}
+
+/* 2. Стили для МОБИЛЬНЫХ (узкие экраны < 768px) */
+@media screen and (max-width: 768px) {
+  .chat-body-split {
+    flex-direction: column; /* Колонки становятся вертикально */
   }
+
+  .chat-online-panel {
+    width: 100% !important; /* Занимает всю ширину экрана */
+    max-height: 150px;      /* Но ограничиваем высоту, чтобы не съела весь чат */
+    border-left: none;      /* Убираем боковую рамку */
+    border-top: 1px solid #3a2e20; /* Добавляем верхнюю рамку */
+    order: -1;              /* ВАЖНО: Поднимаем список НАД сообщениями */
+    margin-bottom: 5px;     /* Отступ между списком и чатом */
+  }
+  
+  /* Если хочешь, чтобы на телефоне список был скрыт по умолчанию 
+     и появлялся только по кнопке, раскомментируй строку ниже: */
+  /* .chat-online-panel { display: none; } */ 
+  /* .chat-online-panel.show-on-mobile { display: flex !important; } */
+}
+
+/* --- Стилизация содержимого панели --- */
+
+.online-header-mini {
+  font-size: 12px;
+  color: #7ab648; /* Зеленый статус */
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px dashed #3a2e20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.online-count-badge {
+  background: #2a2015;
+  color: #ccc;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+.online-list-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  font-size: 11px;
+}
+
+.online-player-row {
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.online-player-row:hover {
+  background: rgba(201, 162, 39, 0.1);
+}
+
+.online-player-row.me {
+  color: #c9a227;
+  font-weight: bold;
+}
+
+.online-player-icon {
+  width: 16px;
+  text-align: center;
+  opacity: 0.7;
+}
   
   /* Класс для показа панели на мобильных (добавляется через JS, если захочешь кнопку) */
   .chat-online-panel.show-on-mobile {
