@@ -3413,9 +3413,8 @@ function chatAdd(channel, from, text, opts) {
 
 function chatRenderMinibar() {
   var msgs = chatLoad();
-  var badge = document.getElementById("chatMinibarBadge");
-  var preview = document.getElementById("chatMinibarPreview");
-  if (!badge || !preview) return;
+  var badge = document.getElementById("chatFloatBadge"); // Новый ID
+  if (!badge) return;
 
   var unread = msgs.filter(function(m) { return !m.read; }).length;
   if (unread > 0) {
@@ -3424,14 +3423,6 @@ function chatRenderMinibar() {
   } else {
     badge.classList.add("hidden");
   }
-
-  if (msgs.length === 0) {
-    preview.textContent = "Чат — нажми, чтобы открыть";
-    return;
-  }
-  var last = msgs[msgs.length - 1];
-  var author = last.from === player.name ? "Ты" : esc(last.from);
-  preview.innerHTML = "<span class='chat-author'>" + author + ":</span> " + esc(last.text);
 }
 
 function chatRenderTabs() {
@@ -3455,6 +3446,11 @@ function chatRenderTabs() {
   box.innerHTML = html;
 }
 
+  function toggleChatWindow() {
+  if (CHAT_OPEN) closeChatForce();
+  else openChat();
+}
+  
 function chatRenderMessages() {
   var box = document.getElementById("chatMessages");
   if (!box) return;
@@ -3526,17 +3522,19 @@ function switchChatTab(tab) {
 function openChat() {
   CHAT_OPEN = true;
   document.getElementById("chatOverlay").classList.remove("hidden");
-  // помечаем текущий канал как прочитанный
+  // Помечаем текущий канал как прочитанный
   switchChatTab(CHAT_ACTIVE_TAB);
   setTimeout(function() {
     var input = document.getElementById("chatInput");
     if (input) input.focus();
-  }, 50);
+  }, 100);
 }
 
 function closeChat(e) {
-  if (e && e.target !== document.getElementById("chatOverlay")) return;
-  closeChatForce();
+  // Закрываем только если клик был по фону (overlay), а не по окну
+  if (e && e.target === document.getElementById("chatOverlay")) {
+    closeChatForce();
+  }
 }
 
 function closeChatForce() {
