@@ -976,22 +976,57 @@ select {
 }
 
 /* === ЧАТ-МИНИБАР === */
+/* === ПЛАВАЮЩАЯ КНОПКА ЧАТА (КРУГЛАЯ) === */
 .chat-minibar {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 36px;
-  background: #1c1510;
-  border-top: 2px solid #5a4630;
+  bottom: 20px;       /* Отступ снизу */
+  right: 20px;        /* Прижимаем к правому краю */
+  width: 50px;        /* Ширина круга */
+  height: 50px;       /* Высота круга */
+  background: linear-gradient(135deg, #c9a227, #8a6d1b); /* Твой золотой градиент */
+  border-radius: 50%; /* Делаем идеально круглым */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* Тень для объема */
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  gap: 10px;
-  font-size: 12px;
+  justify-content: center;
+  z-index: 1000;      /* Поверх всего остального контента */
   cursor: pointer;
-  z-index: 100;
-  transition: background 0.2s;
+  transition: transform 0.2s ease;
+  border: 2px solid #fff; /* Белая рамочка, чтобы было видно на темном фоне */
+}
+
+/* Эффект при наведении мышкой (для десктопа) */
+.chat-minibar:hover {
+  transform: scale(1.1);
+}
+
+/* Иконка внутри кнопки */
+.chat-minibar .chat-icon {
+  font-size: 24px;
+  color: white;
+  line-height: 1;
+}
+
+/* Скрываем текст превью и подсказку "T", так как они не влезают в круг */
+.chat-minibar .chat-preview,
+.chat-minibar .chat-hint {
+  display: none !important;
+}
+
+/* Бейдж с количеством непрочитанных сообщений */
+.chat-minibar .chat-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 /* === МОДАЛЬНЫЕ ОКНА === */
 .modal-overlay {
