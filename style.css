@@ -1477,7 +1477,7 @@ select {
   animation: slideUp 0.3s ease-out;
   margin: 0 auto; /* Центрируем на широких экранах */
   width: 100%;
-  max-width: 500px; /* Ограничиваем ширину на ПК */
+  max-width: 700px; /* Ограничиваем ширину на ПК */
 }
 
 @keyframes slideUp { 
@@ -1633,13 +1633,38 @@ select {
   overflow: hidden; /* Важно для скролла внутри панелей */
 }
 
-/* Левая панель (основной чат) */
+/* Левая панель (основной чат) - 70% */
 .chat-main-panel {
-  flex: 2; /* Занимает 2/3 ширины */
+  flex: 0 0 70%; /* Жестко задаем 70% ширины */
+  width: 70%;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #3a2e20; /* Линия-разделитель между чатом и онлайном */
+  border-right: 1px solid #3a2e20; /* Линия-разделитель */
   min-width: 0; /* Предотвращает переполнение текста */
+}
+
+/* Правая панель (список игроков) - 30% */
+.chat-online-panel {
+  flex: 0 0 30%; /* Жестко задаем 30% ширины */
+  width: 30%;
+  background: #0f0c09;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  overflow: hidden; /* Важно: скролл будет внутри списка, а не в панели */
+}
+
+/* Заголовок списка онлайн */
+.online-header-mini {
+  font-size: 12px;
+  color: #7ab648;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px dashed #3a2e20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0; /* Запрещаем сжимать заголовок */
 }
 
 .online-count-badge {
@@ -1655,6 +1680,7 @@ select {
   flex: 1;
   overflow-y: auto;
   font-size: 11px;
+  padding-right: 2px; /* Место под скроллбар */
 }
 
 /* Строка игрока в списке */
@@ -1666,106 +1692,9 @@ select {
   display: flex;
   align-items: center;
   gap: 5px;
-  white-space: nowrap; /* Имя не переносится на новую строку */
-}
-
-.online-player-row:hover {
-  background: rgba(201, 162, 39, 0.1); /* Легкое золотое свечение при наведении мышки */
-}
-
-/* Твой собственный аккаунт в списке выделяется золотом */
-.online-player-row.me {
-  color: #c9a227; 
-  font-weight: bold;
-}
-
-/* Иконка класса (меч, щит и т.д.) */
-.online-player-icon {
-  width: 16px;
-  text-align: center;
-  opacity: 0.7;
-}
-
-/* === АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ТЕЛЕФОНОВ === */
-@media (max-width: 768px) {
-  .chat-body-split {
-    flex-direction: column; /* Колонки становятся друг под другом */
-  }
-  
- /* ==========================================
-   ПРАВАЯ ПАНЕЛЬ ОНЛАЙН (ФИНАЛЬНАЯ ВЕРСИЯ)
-   ========================================== */
-
-/* 1. Базовые стили для ДЕСКТОПА (широкие экраны) */
-.chat-online-panel {
-  display: flex !important; /* Гарантируем видимость */
-  flex-direction: column;
-  width: 200px;             /* Фиксированная ширина справа */
-  min-width: 200px;         /* Не даем ей схлопнуться */
-  background: #0f0c09;      /* Темный фон */
-  border-left: 1px solid #3a2e20; /* Разделитель слева от списка */
-  padding: 5px;
-  overflow-y: auto;         /* Скролл, если игроков много */
-  flex-shrink: 0;           /* Запрещаем сжиматься при нехватке места */
-}
-
-/* 2. Стили для МОБИЛЬНЫХ (узкие экраны < 768px) */
-@media screen and (max-width: 768px) {
-  .chat-body-split {
-    flex-direction: column; /* Колонки становятся вертикально */
-  }
-
-  .chat-online-panel {
-    width: 100% !important; /* Занимает всю ширину экрана */
-    max-height: 150px;      /* Но ограничиваем высоту, чтобы не съела весь чат */
-    border-left: none;      /* Убираем боковую рамку */
-    border-top: 1px solid #3a2e20; /* Добавляем верхнюю рамку */
-    order: -1;              /* ВАЖНО: Поднимаем список НАД сообщениями */
-    margin-bottom: 5px;     /* Отступ между списком и чатом */
-  }
-  
-  /* Если хочешь, чтобы на телефоне список был скрыт по умолчанию 
-     и появлялся только по кнопке, раскомментируй строку ниже: */
-  /* .chat-online-panel { display: none; } */ 
-  /* .chat-online-panel.show-on-mobile { display: flex !important; } */
-}
-
-/* --- Стилизация содержимого панели --- */
-
-.online-header-mini {
-  font-size: 12px;
-  color: #7ab648; /* Зеленый статус */
-  margin-bottom: 5px;
-  padding-bottom: 3px;
-  border-bottom: 1px dashed #3a2e20;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.online-count-badge {
-  background: #2a2015;
-  color: #ccc;
-  padding: 1px 5px;
-  border-radius: 3px;
-  font-size: 10px;
-}
-
-.online-list-scrollable {
-  flex: 1;
-  overflow-y: auto;
-  font-size: 11px;
-}
-
-.online-player-row {
-  padding: 4px 6px;
-  cursor: pointer;
-  border-radius: 3px;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 5px;
   white-space: nowrap;
+  overflow: hidden; /* Скрываем текст, если не влезает */
+  text-overflow: ellipsis; /* Добавляем троеточие, если имя длинное */
 }
 
 .online-player-row:hover {
@@ -1773,7 +1702,7 @@ select {
 }
 
 .online-player-row.me {
-  color: #c9a227;
+  color: #c9a227; 
   font-weight: bold;
 }
 
@@ -1781,16 +1710,27 @@ select {
   width: 16px;
   text-align: center;
   opacity: 0.7;
+  flex-shrink: 0;
 }
-  
-  /* Класс для показа панели на мобильных (добавляется через JS, если захочешь кнопку) */
-  .chat-online-panel.show-on-mobile {
-    display: block;
+
+/* === АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ТЕЛЕФОНОВ === */
+@media (max-width: 768px) {
+  .chat-body-split {
+    flex-direction: column; /* Колонки друг под другом */
   }
   
-  /* Убираем вертикальную линию-разделитель на телефонах */
+  /* На телефоне делаем чат 70% высоты, а онлайн 30% */
   .chat-main-panel {
+    flex: 0 0 70%;
+    height: 70%;
     border-right: none;
     border-bottom: 1px solid #3a2e20;
+  }
+  
+  .chat-online-panel {
+    flex: 0 0 30%;
+    height: 30%;
+    display: flex; /* Показываем на телефоне, а не скрываем */
+    border-top: 1px solid #3a2e20;
   }
 }
