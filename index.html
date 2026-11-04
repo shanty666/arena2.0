@@ -7,13 +7,63 @@
 <title>Когда есть время</title>
 <link rel="stylesheet" href="style.css?v=8">
 <!-- <script src="https://telegram.org/js/telegram-web-app.js"></script> -->
- <style>
-/* ПРИНУДИТЕЛЬНОЕ РАЗДЕЛЕНИЕ ЧАТА */
-#chatOverlay .chat-body-split { display: flex !important; flex-direction: row !important; }
-#chatOverlay .chat-main-panel { flex: 0 0 70% !important; width: 70% !important; display: flex !important; flex-direction: column !important; border-right: 1px solid #3a2e20 !important; }
-#chatOverlay .chat-online-panel { flex: 0 0 30% !important; width: 30% !important; display: flex !important; flex-direction: column !important; background: #0f0c09 !important; padding: 5px !important; }
-#chatOverlay .online-list-scrollable { flex: 1 !important; overflow-y: auto !important; }
-#chatOverlay .chat-window-mobile { max-width: 1100px !important; width: 95% !important; }
+<style>
+/* --- УМНЫЕ СТИЛИ ДЛЯ ЧАТА --- */
+
+/* 1. Общие настройки для окна чата (на ПК) */
+#chatOverlay .chat-window-mobile { 
+    max-width: 1000px !important; 
+    width: 100% !important; 
+    height: 80vh !important; 
+    max-height: 800px !important;
+}
+
+/* 2. Левая часть (Чат) - на ПК занимает 70% */
+#chatOverlay .chat-main-panel { 
+    flex: 0 0 70% !important; 
+    width: 70% !important; 
+    display: flex !important; 
+    flex-direction: column !important; 
+    border-right: 1px solid #3a2e20 !important; 
+}
+
+/* 3. Правая часть (Онлайн) - на ПК занимает 30% */
+#chatOverlay .chat-online-panel { 
+    flex: 0 0 30% !important; 
+    width: 30% !important; 
+    display: flex !important; 
+    flex-direction: column !important; 
+    background: #0f0c09 !important; 
+}
+
+/* =========================================
+   НАСТРОЙКИ ДЛЯ МОБИЛЬНЫХ (экран меньше 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Окно чата на телефоне */
+    #chatOverlay .chat-window-mobile {
+        height: 85vh !important;
+        max-height: none !important;
+        border-radius: 15px 15px 0 0 !important;
+    }
+
+    /* Левая часть (Чат) занимает ВСЮ ширину */
+    #chatOverlay .chat-main-panel { 
+        flex: 1 1 auto !important; 
+        width: 100% !important;
+        border-right: none !important; 
+    }
+
+    /* 👇 ВОТ ГЛАВНАЯ СТРОКА: Прячем онлайн на телефоне 👇 */
+    #chatOverlay .chat-online-panel { 
+        display: none !important; 
+    }
+    
+    /* Убираем разделитель между колонками */
+    #chatOverlay .chat-body-split {
+        flex-direction: column !important;
+    }
+}
 </style>
 </head>
 <body>
