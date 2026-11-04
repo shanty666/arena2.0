@@ -222,22 +222,6 @@
     </p>
   </div>
 </div>
-<div id="chatOverlay" class="chat-modal hidden" onclick="closeChat(event)">
-  <div class="chat-window" onclick="event.stopPropagation()">
-    <div class="chat-header">
-      <span class="chat-title">💬 Чат</span>
-      <button class="chat-close" onclick="closeChatForce()">&times;</button>
-    </div>
-    <div class="chat-tabs" id="chatTabs"></div>
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="chat-input-row">
-      <select id="chatPmSelect" class="hidden"></select>
-      <input type="text" id="chatInput" maxlength="200"
-             placeholder="Написать сообщение..." autocomplete="off">
-      <button onclick="sendChatMessage()">Отправить</button>
-    </div>
-  </div>
-</div>
 
 <script src="data/items.js"></script>
 <script src="data/balance.js"></script>
@@ -3774,14 +3758,10 @@ setInterval(function() {
 <!-- Само окно чата (теперь оно не внизу страницы, а поверх всего) -->
 <div id="chatOverlay" class="chat-modal hidden" onclick="closeChat(event)">
 <div class="chat-window-mobile" onclick="event.stopPropagation()">
-  
-  <!-- Шапка чата -->
   <div class="chat-header-mobile">
     <span class="chat-title">💬 Чат Арены</span>
     <button class="chat-close-mobile" onclick="closeChatForce()">&times;</button>
   </div>
-
-<!-- НОВАЯ ОБЕРТКА ДЛЯ ДВУХ КОЛОНОК -->
 <div class="chat-body-split">
   
   <!-- ЛЕВАЯ ЧАСТЬ: Табы и Сообщения -->
