@@ -1623,35 +1623,35 @@ select {
   }
 }
 /* ==========================================
-   НОВЫЙ ИНТЕРФЕЙС ЧАТА (SPLIT VIEW + ОНЛАЙН)
+   НОВЫЙ ИНТЕРФЕЙС ЧАТА (70% / 30%)
    ========================================== */
 
 /* Обертка для двух колонок */
 .chat-body-split {
   display: flex;
-  flex: 1; /* Занимает все свободное место по высоте */
-  overflow: hidden; /* Важно для скролла внутри панелей */
+  flex: 1; /* Занимает всё свободное место по высоте */
+  overflow: hidden; 
 }
 
-/* Левая панель (основной чат) - 70% */
+/* Левая панель (Чат) - 70% */
 .chat-main-panel {
-  flex: 0 0 70%; /* Жестко задаем 70% ширины */
+  flex: 0 0 70%; /* Жестко 70% ширины */
   width: 70%;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #3a2e20; /* Линия-разделитель */
-  min-width: 0; /* Предотвращает переполнение текста */
+  min-width: 0; 
 }
 
-/* Правая панель (список игроков) - 30% */
+/* Правая панель (Игроки) - 30% */
 .chat-online-panel {
-  flex: 0 0 30%; /* Жестко задаем 30% ширины */
+  flex: 0 0 30%; /* Жестко 30% ширины */
   width: 30%;
   background: #0f0c09;
   display: flex;
   flex-direction: column;
   padding: 5px;
-  overflow: hidden; /* Важно: скролл будет внутри списка, а не в панели */
+  overflow: hidden; 
 }
 
 /* Заголовок списка онлайн */
@@ -1664,7 +1664,7 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-shrink: 0; /* Запрещаем сжимать заголовок */
+  flex-shrink: 0; 
 }
 
 .online-count-badge {
@@ -1678,23 +1678,21 @@ select {
 /* Контейнер со списком игроков */
 .online-list-scrollable {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: auto; /* Скролл только для списка игроков */
   font-size: 11px;
-  padding-right: 2px; /* Место под скроллбар */
 }
 
-/* Строка игрока в списке */
+/* Строка игрока */
 .online-player-row {
   padding: 4px 6px;
   cursor: pointer;
   border-radius: 3px;
-  transition: background 0.2s;
   display: flex;
   align-items: center;
   gap: 5px;
   white-space: nowrap;
-  overflow: hidden; /* Скрываем текст, если не влезает */
-  text-overflow: ellipsis; /* Добавляем троеточие, если имя длинное */
+  overflow: hidden; 
+  text-overflow: ellipsis; 
 }
 
 .online-player-row:hover {
@@ -1713,13 +1711,12 @@ select {
   flex-shrink: 0;
 }
 
-/* === АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ТЕЛЕФОНОВ === */
+/* Адаптация для телефонов (чтобы колонки были друг под другом) */
 @media (max-width: 768px) {
   .chat-body-split {
-    flex-direction: column; /* Колонки друг под другом */
+    flex-direction: column; 
   }
   
-  /* На телефоне делаем чат 70% высоты, а онлайн 30% */
   .chat-main-panel {
     flex: 0 0 70%;
     height: 70%;
@@ -1730,7 +1727,12 @@ select {
   .chat-online-panel {
     flex: 0 0 30%;
     height: 30%;
-    display: flex; /* Показываем на телефоне, а не скрываем */
+    display: flex; 
     border-top: 1px solid #3a2e20;
   }
+}
+
+/* 👇 ВАЖНО: Увеличиваем окно чата, чтобы список игроков не был слишком узким 👇 */
+.chat-window-mobile {
+  max-width: 800px !important; /* Делаем окно шире */
 }
