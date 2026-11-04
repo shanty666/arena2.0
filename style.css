@@ -1623,29 +1623,29 @@ select {
   }
 }
 /* ==========================================
-   НОВЫЙ ИНТЕРФЕЙС ЧАТА (70% / 30%)
+   ФИНАЛЬНЫЙ ИНТЕРФЕЙС ЧАТА (70/30)
    ========================================== */
 
 /* Обертка для двух колонок */
 .chat-body-split {
   display: flex;
-  flex: 1; /* Занимает всё свободное место по высоте */
+  flex: 1; /* Занимает всё свободное место */
   overflow: hidden; 
 }
 
 /* Левая панель (Чат) - 70% */
 .chat-main-panel {
-  flex: 0 0 70%; /* Жестко 70% ширины */
+  flex: 0 0 70%;
   width: 70%;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #3a2e20; /* Линия-разделитель */
+  border-right: 1px solid #3a2e20; /* Разделитель */
   min-width: 0; 
 }
 
 /* Правая панель (Игроки) - 30% */
 .chat-online-panel {
-  flex: 0 0 30%; /* Жестко 30% ширины */
+  flex: 0 0 30%;
   width: 30%;
   background: #0f0c09;
   display: flex;
@@ -1678,7 +1678,7 @@ select {
 /* Контейнер со списком игроков */
 .online-list-scrollable {
   flex: 1;
-  overflow-y: auto; /* Скролл только для списка игроков */
+  overflow-y: auto;
   font-size: 11px;
 }
 
@@ -1711,7 +1711,12 @@ select {
   flex-shrink: 0;
 }
 
-/* Адаптация для телефонов (чтобы колонки были друг под другом) */
+/* Делаем окно чата шире на ПК */
+.chat-window-mobile {
+  max-width: 800px !important;
+}
+
+/* Адаптация для телефонов (колонки друг под другом) */
 @media (max-width: 768px) {
   .chat-body-split {
     flex-direction: column; 
@@ -1730,9 +1735,4 @@ select {
     display: flex; 
     border-top: 1px solid #3a2e20;
   }
-}
-
-/* 👇 ВАЖНО: Увеличиваем окно чата, чтобы список игроков не был слишком узким 👇 */
-.chat-window-mobile {
-  max-width: 800px !important; /* Делаем окно шире */
 }
